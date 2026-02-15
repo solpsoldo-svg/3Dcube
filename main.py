@@ -45,6 +45,7 @@ def cam_normal(cam_pos, v, normal):  # angle between camera's vector and point's
     is_normal = np.dot(cam_vec, normal)
 
     is_normal_deg = np.arccos(is_normal)
+    #print(is_normal_deg)
 
     return np.degrees(is_normal_deg)  # angle
 
@@ -59,6 +60,7 @@ project_matrix = pj_matrix(0.1, 50.0, width / height, 60)  # near, far, aspect, 
 veiw_matrix = veiw(np.array([0, 0, 0]), cam_pos, np.array([0, 1, 0]))  # cam_target, cam_pos, vector_up
 model = models_matrix(0, 0, 0, 1, 1, 1, 0, 0, 0)  # angleX, angleY, angleZ, sizeX, sizeY, sizeZ, moveX, moveY, moveZ
 xv, yv, zv = 0, 0, 0  # start angles
+
 while 1:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -74,14 +76,15 @@ while 1:
             height - (new_points[i][1] + 1) * height / 2)
     for i in index:
         norm = normalling(new_points[i[0]][:-1], new_points[i[1]][:-1], new_points[i[2]][:-1])
-        ang = cam_normal(cam_pos, new_points[i[1]][:3], norm)
+        ang = cam_normal(cam_pos, points[i[1]][:3], norm)
+        print(ang)
         if ang > 90:
             continue
         g_color = 200
         pygame.draw.polygon(screen, (g_color, g_color, g_color),
                             [new_points[i[0]][:-2], new_points[i[1]][:-2], new_points[i[2]][:-2]], 1)
 
-    #yv += 5
+    yv += 5
     #xv += 0.001
     pygame.display.flip()
     screen.fill((0, 0, 0))
