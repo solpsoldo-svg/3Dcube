@@ -67,22 +67,25 @@ while 1:
             pygame.QUIT
             quit()
     new_points=[]
-    model = models_matrix(0, 0, 0, 1, 1, 1, 0, 0, 0)
+    newp=[]
+    model = models_matrix(0, yv, yv, 1, 1, 1, 0, 0, 0)
     for i in range(len(points)):
+        newp.append(model @ points[i])
         new_points.append(project_matrix @ veiw_matrix @ model @ points[i])
         new_points[i][0], new_points[i][1], new_points[i][2] = new_points[i][0] / new_points[i][3], new_points[i][1] / \
                                                  new_points[i][3], new_points[i][2] / new_points[i][3]
         new_points[i][0], new_points[i][1] = np.round((new_points[i][0] + 1) * width / 2), np.round(
             height - (new_points[i][1] + 1) * height / 2)
+    print(newp)
     for i in index:
-        norm = normalling(new_points[i[0]][:-1], new_points[i[1]][:-1], new_points[i[2]][:-1])
-        ang = cam_normal(cam_pos, points[i[1]][:3], norm)
+        norm = normalling(newp[i[0]][:-1], newp[i[1]][:-1], newp[i[2]][:-1])
+        ang = cam_normal(cam_pos, newp[i[1]][:3], norm)
         print(ang)
         if ang > 90:
             continue
-        g_color = 200
+        g_color = 200 - int(ang)
         pygame.draw.polygon(screen, (g_color, g_color, g_color),
-                            [new_points[i[0]][:-2], new_points[i[1]][:-2], new_points[i[2]][:-2]], 1)
+                            [new_points[i[0]][:-2], new_points[i[1]][:-2], new_points[i[2]][:-2]])
 
     yv += 5
     #xv += 0.001
